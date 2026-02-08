@@ -43,3 +43,25 @@ Ejecuta el siguiente comando para descargar automáticamente las librerías nece
 
 ```bash
 npm install
+```
+
+### 3. Iniciar el Servidor
+Una vez instaladas las dependencias, enciende el servidor Backend:
+
+```bash
+node server.js
+```
+
+## 🕹️ Cómo Usar la Aplicación
+
+1.  Abre tu navegador y ve a: **`http://localhost:3000`**
+2.  Verás la **Landing Page**. Haz clic en el botón **"Acceso Copiloto OS"**.
+3.  Inicia sesión con las siguientes credenciales de prueba:
+
+| Rol | Usuario | Contraseña | Permisos |
+| :--- | :--- | :--- | :--- |
+| **Administrador** | `admin` | `123` | Control Total + Gestión de Usuarios |
+| **Empleado** | `diego` | `diego` | Solo lectura y completar tareas |
+
+> **Nota Importante:** Puedes crear nuevos usuarios desde el Dashboard entrando como Administrador.
+
