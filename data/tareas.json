@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1770514871354,
+    "title": "limpieza auto X10",
+    "createdAt": "2/7/2026",
+    "assignedTo": "Jorge",
+    "createdBy": "Elon Musk",
+    "status": "Completada",
+    "assignmentArea": "General"
+  },
+  {
+    "id": 1770515508832,
+    "title": "revisar autos X",
+    "createdAt": "2/7/2026",
+    "assignedTo": "Diego",
+    "createdBy": "Elon Musk",
+    "status": "Completada",
+    "assignmentArea": "General",
+    "completedAt": "2/8/2026"
+  },
+  {
+    "id": 1770517678068,
+    "title": "limpieza auto rojo prueba",
+    "createdAt": "2/7/2026",
+    "assignedTo": "Diego",
+    "createdBy": "Elon Musk",
+    "status": "Pendiente",
+    "assignmentArea": "General"
+  }
+]
