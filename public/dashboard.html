@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Copiloto | Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+
+        /* --- ESTILOS GENERALES --- */
+        body { font-family: 'Roboto', sans-serif; background-color: #111; color: #fff; }
+        .dashboard-container { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: #000; border-bottom: 1px solid #333; }
+        
+        /* ADMIN PANEL */
+        .admin-panel { background-color: #1c1c1c; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333; display: none; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .panel-header h3 { margin: 0; color: #fff; font-size: 1.2rem; }
+        .input-group { display: flex; gap: 15px; align-items: center; }
+        
+        /* INPUTS Y SELECTS */
+        .tesla-input { padding: 12px 15px; border-radius: 4px; border: 1px solid #444; background-color: #000; color: #fff; font-size: 1rem; outline: none; }
+        .tesla-input:focus { border-color: #e82127; }
+        .input-desc { flex: 3; } .input-user { flex: 1; cursor: pointer; }
+
+        /* BOTONES */
+        .btn-crear { padding: 12px 25px; background-color: #e82127; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        .btn-crear:hover { background-color: #cc1d22; }
+        .btn-user-add { padding: 8px 15px; background-color: transparent; border: 1px solid #3b82f6; color: #3b82f6; border-radius: 4px; cursor: pointer; font-weight: 500; transition: 0.3s; }
+        .btn-user-add:hover { background-color: #3b82f6; color: #fff; }
+
+        /* TABLA */
+        .table-container { background-color: #181818; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
+        .tasks-table { width: 100%; border-collapse: collapse; }
+        .tasks-table th { background-color: #222; color: #aaa; text-transform: uppercase; padding: 15px; text-align: left; font-size: 0.85rem; }
+        .tasks-table td { padding: 15px; border-bottom: 1px solid #2a2a2a; vertical-align: middle; }
+        .task-id { font-family: 'Courier New', monospace; color: #666; margin-right: 10px; border: 1px solid #333; padding: 2px 6px; border-radius: 4px; }
+        .task-desc { font-weight: 500; font-size: 1.05rem; color: #fff; }
+        
+        /* ACCIONES ADMIN */
+        .btn-action { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 8px; transition: transform 0.2s; }
+        .btn-action:hover { transform: scale(1.2); }
+        .btn-edit { color: #3b82f6; } 
+        .btn-delete { color: #ef4444; } 
+
+        /* BOTÓN DE GUARDAR PARA USUARIO */
+        .btn-save-manual {
+            background-color: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; transition: background 0.3s;
+        }
+        .btn-save-manual:hover { background-color: #059669; }
+
+        .user-badge { display: flex; align-items: center; gap: 8px; background-color: #333; padding: 5px 10px; border-radius: 20px; width: fit-content; }
+        .avatar-circle { width: 24px; height: 24px; background-color: #666; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; font-weight: bold; }
+        .status-select { padding: 5px 10px; border-radius: 15px; background-color: #000; color: #fff; border: 1px solid #444; cursor: pointer; }
+
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; display: none; backdrop-filter: blur(5px); }
+        .modal-box { background: #1c1c1c; padding: 30px; border-radius: 12px; border: 1px solid #333; width: 90%; max-width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: left; }
+        .modal-box h3 { margin-top: 0; color: #fff; margin-bottom: 15px; font-size: 1.4rem; text-align: center; }
+        .modal-box label { display: block; margin-top: 10px; color: #aaa; font-size: 0.9rem; margin-bottom: 5px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 25px; justify-content: center; }
+        .btn-cancel { background: transparent; border: 1px solid #666; color: #ccc; padding: 10px 20px; border-radius: 4px; cursor: pointer; flex: 1; }
+        .btn-save { background: #e82127; border: none; color: white; padding: 10px 20px; border-radius: 4px; cursor: pointer; flex: 1; }
+        .btn-save:hover { background: #cc1d22; }
+
+        @media (max-width: 768px) { .tasks-table { display: none; } .mobile-cards { display: flex; flex-direction: column; gap: 15px; } .input-group { flex-direction: column; } }
+        .mobile-cards { display: none; }
+    </style>
+</head>
+<body class="tesla-app-bg">
+
+    <header class="main-header">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="img/logo.png" alt="Tesla" style="height: 20px;">
+            <span style="border-left: 1px solid #444; padding-left: 15px;">Copiloto OS</span>
+        </div>
+        <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding: 5px 15px; cursor:pointer;">Salir</button>
+    </header>
+
+    <main class="dashboard-container">
+        <h2 id="greeting">Bienvenido</h2>
+        
+        <div id="admin-panel" class="admin-panel">
+            <div class="panel-header">
+                <h3>+ Nueva Asignación</h3>
+                <button onclick="abrirModalUsuario()" class="btn-user-add">👤 Crear Usuario</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="desc-tarea" class="tesla-input input-desc" placeholder="Descripción (Ej. Revisión Batería)">
+                <select id="user-tarea" class="tesla-input input-user">
+                    <option value="" disabled selected>Seleccionar Empleado...</option>
+                </select>
+                <button onclick="crearTarea()" class="btn-crear">Asignar</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="tasks-table">
+                <thead>
+                    <tr>
+                        <th width="35%">ID / Descripción</th>
+                        <th>Inicio</th> <th>Fin</th>    <th>Asignado A</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-tareas"></tbody>
+            </table>
+        </div>
+        <div id="mobile-cards" class="mobile-cards"></div>
+    </main>
+
+    <div id="modal-editar" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Editar Tarea</h3>
+            <label>Descripción:</label>
+            <input type="text" id="edit-desc" class="tesla-input" style="width:100%; box-sizing:border-box;">
+            <label>Asignado a:</label>
+            <select id="edit-user" class="tesla-input" style="width:100%; box-sizing:border-box;">
+                <option value="" disabled>Cargando empleados...</option>
+            </select>
+            <input type="hidden" id="edit-id">
+            <div class="modal-buttons">
+                <button onclick="cerrarModalEditar()" class="btn-cancel">Cancelar</button>
+                <button onclick="intentarGuardar()" class="btn-save">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-usuario" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color: #3b82f6;">Registrar Nuevo Usuario</h3>
+            <label>Nombre Completo:</label>
+            <input type="text" id="reg-name" class="tesla-input" placeholder="Ej. Laura Martínez" style="width:100%; box-sizing:border-box;">
+            <label>Usuario (Login):</label>
+            <input type="text" id="reg-username" class="tesla-input" placeholder="Ej. laura" style="width:100%; box-sizing:border-box;">
+            <label>Contraseña:</label>
+            <input type="password" id="reg-password" class="tesla-input" placeholder="******" style="width:100%; box-sizing:border-box;">
+            <label>Rol:</label>
+            <select id="reg-role" class="tesla-input" style="width:100%; box-sizing:border-box;">
+                <option value="user">Empleado (Solo ver tareas)</option>
+                <option value="admin">Administrador (Control Total)</option>
+            </select>
+            <div class="modal-buttons">
+                <button onclick="cerrarModalUsuario()" class="btn-cancel">Cancelar</button>
+                <button onclick="registrarUsuario()" class="btn-save" style="background-color: #3b82f6;">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-sistema" class="modal-overlay">
+        <div class="modal-box" style="text-align: center;">
+            <h3 id="sys-title">Mensaje</h3>
+            <p id="sys-msg" style="color:#ccc;"></p>
+            <div class="modal-buttons" id="sys-btns"></div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:3000/api';
+        const token = localStorage.getItem('teslaToken');
+        const role = localStorage.getItem('teslaRole');
+        const myName = localStorage.getItem('teslaName');
+        let tareasGlobales = [];
+        let accionPendiente = null;
+
+        if (!token) window.location.href = 'login.html';
+        document.getElementById('greeting').innerText = `Panel de Control: ${myName} (${role.toUpperCase()})`;
+        
+        if (role === 'admin') {
+            document.getElementById('admin-panel').style.display = 'block';
+            cargarUsuariosSelect();
+        }
+
+        // --- UI SISTEMA ---
+        const ui = {
+            alertar: (titulo, mensaje) => {
+                document.getElementById('sys-title').innerText = titulo;
+                document.getElementById('sys-msg').innerText = mensaje;
+                document.getElementById('sys-title').style.color = "#fff";
+                document.getElementById('sys-btns').innerHTML = `<button onclick="ui.cerrar()" class="btn-save">Entendido</button>`;
+                document.getElementById('modal-sistema').style.display = 'flex';
+            },
+            confirmar: (titulo, mensaje, callback) => {
+                document.getElementById('sys-title').innerText = titulo;
+                document.getElementById('sys-msg').innerText = mensaje;
+                document.getElementById('sys-title').style.color = "#e82127";
+                accionPendiente = callback;
+                document.getElementById('sys-btns').innerHTML = `<button onclick="ui.cerrar()" class="btn-cancel">Cancelar</button><button onclick="ui.ejecutarAccion()" class="btn-save">Confirmar</button>`;
+                document.getElementById('modal-sistema').style.display = 'flex';
+            },
+            cerrar: () => { document.getElementById('modal-sistema').style.display = 'none'; accionPendiente = null; },
+            ejecutarAccion: () => { if (accionPendiente) accionPendiente(); ui.cerrar(); }
+        };
+
+        async function cargarUsuariosSelect() {
+            try {
+                const res = await fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if(res.ok) {
+                    const usuarios = await res.json();
+                    const options = '<option value="" disabled selected>Seleccionar Empleado...</option>' + 
+                                    usuarios.map(u => `<option value="${u.name}">${u.name} (${u.username})</option>`).join('');
+                    document.getElementById('user-tarea').innerHTML = options;
+                    document.getElementById('edit-user').innerHTML = options;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // --- LÓGICA PRINCIPAL ---
+        async function cargar() {
+            const res = await fetch(`${API}/tareas`, { headers: { 'Authorization': `Bearer ${token}` } });
+            tareasGlobales = await res.json();
+            render(tareasGlobales);
+        }
+
+        function render(tareas) {
+            const tbody = document.getElementById('lista-tareas');
+            const mobile = document.getElementById('mobile-cards');
+            tbody.innerHTML = ''; mobile.innerHTML = '';
+            
+            tareas.forEach(t => {
+                const initUser = t.assignedTo ? t.assignedTo[0].toUpperCase() : '?';
+                
+                //  Verificamos si existe la fecha de completado
+                const fechaFin = t.completedAt ? `<span style="color:#10b981; font-weight:bold;">${t.completedAt}</span>` : '<span style="color:#444;">-</span>';
+
+                let acciones = '';
+                let selectAttributes = '';
+
+                if (role === 'admin') {
+                    acciones = `
+                        <button onclick="abrirModalEditar(${t.id})" class="btn-action btn-edit" title="Editar">✎</button>
+                        <button onclick="preguntaBorrar(${t.id})" class="btn-action btn-delete" title="Borrar">✖</button>
+                    `;
+                    selectAttributes = `onchange="cambiarStatus(${t.id}, this.value)"`;
+                } else {
+                    acciones = `<button onclick="guardarEstatusManual(${t.id})" class="btn-save-manual">💾 Guardar</button>`;
+                    selectAttributes = `id="status-${t.id}"`;
+                }
+
+                const htmlRow = `
+                    <tr>
+                        <td><span class="task-id">#${t.id}</span><span class="task-desc">${t.title}</span></td>
+                        <td style="color:#888">${t.createdAt}</td>
+                        <td>${fechaFin}</td> <td><div class="user-badge"><div class="avatar-circle">${initUser}</div>${t.assignedTo}</div></td>
+                        <td>
+                            <select ${selectAttributes} class="status-select" style="border-color:${getColor(t.status)}; color:${getColor(t.status)}">
+                                <option value="Pendiente" ${t.status=='Pendiente'?'selected':''}>Pendiente</option>
+                                <option value="En Proceso" ${t.status=='En Proceso'?'selected':''}>En Proceso</option>
+                                <option value="Completada" ${t.status=='Completada'?'selected':''}>Completada</option>
+                            </select>
+                        </td>
+                        <td>${acciones}</td>
+                    </tr>`;
+                
+                tbody.innerHTML += htmlRow;
+                
+                // VISTA MÓVIL 
+                mobile.innerHTML += `
+                    <div style="background:#1c1c1c; padding:20px; border-radius:8px; border:1px solid #333;">
+                        <div style="display:flex; justify-content:space-between;"><small>#${t.id}</small><div>${acciones}</div></div>
+                        <h3 style="margin:5px 0 10px 0;">${t.title}</h3>
+                        <p style="color:#888; margin-bottom:5px;">Inicio: ${t.createdAt}</p>
+                        ${t.completedAt ? `<p style="color:#10b981; margin-bottom:10px;">Completado: ${t.completedAt}</p>` : ''}
+                        <p style="color:#aaa;">Asignado: ${t.assignedTo}</p>
+                        <p style="color:${getColor(t.status)}">Estatus: ${t.status}</p>
+                    </div>`;
+            });
+        }
+
+        // --- FUNCIONES ---
+        function guardarEstatusManual(id) {
+            const nuevoStatus = document.getElementById(`status-${id}`).value;
+            ui.confirmar("¿Confirmar Guardado?", `El estatus cambiará a: ${nuevoStatus}`, async () => {
+                await fetch(`${API}/tareas/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ status: nuevoStatus })
+                });
+                ui.alertar("Éxito", "Cambios guardados correctamente.");
+                cargar();
+            });
+        }
+
+        async function cambiarStatus(id, st) {
+            await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: st }) });
+            cargar();
+        }
+
+        async function crearTarea() {
+            const desc = document.getElementById('desc-tarea').value;
+            const user = document.getElementById('user-tarea').value;
+            if(!desc || !user) return ui.alertar("Faltan Datos", "Selecciona un empleado.");
+            await fetch(`${API}/tareas`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title: desc, assignedTo: user, assignmentArea: "General" }) });
+            document.getElementById('desc-tarea').value = '';
+            cargar();
+        }
+
+        function abrirModalEditar(id) {
+            const tarea = tareasGlobales.find(t => t.id === id);
+            if(tarea) {
+                document.getElementById('edit-id').value = id;
+                document.getElementById('edit-desc').value = tarea.title;
+                document.getElementById('edit-user').value = tarea.assignedTo;
+                document.getElementById('modal-editar').style.display = 'flex';
+            }
+        }
+        function cerrarModalEditar() { document.getElementById('modal-editar').style.display = 'none'; }
+        
+        function intentarGuardar() {
+            ui.confirmar("¿Guardar Cambios?", "Se actualizará la tarea.", async () => {
+                const id = document.getElementById('edit-id').value;
+                const newTitle = document.getElementById('edit-desc').value;
+                const newUser = document.getElementById('edit-user').value;
+                await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title: newTitle, assignedTo: newUser }) });
+                cerrarModalEditar();
+                cargar();
+            });
+        }
+
+        function preguntaBorrar(id) { ui.confirmar("¿Borrar?", "Acción permanente.", async () => { await fetch(`${API}/tareas/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); cargar(); }); }
+        
+        // --- USUSARIOS ---
+        function abrirModalUsuario() { document.getElementById('reg-name').value=''; document.getElementById('reg-username').value=''; document.getElementById('reg-password').value=''; document.getElementById('modal-usuario').style.display='flex'; }
+        function cerrarModalUsuario() { document.getElementById('modal-usuario').style.display='none'; }
+        async function registrarUsuario() {
+            const name = document.getElementById('reg-name').value; const username = document.getElementById('reg-username').value; const password = document.getElementById('reg-password').value; const role = document.getElementById('reg-role').value;
+            if (!name || !username || !password) return ui.alertar("Error", "Faltan datos");
+            const res = await fetch(`${API}/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, username, password, role }) });
+            if (res.ok) { ui.alertar("Éxito", "Usuario creado."); cerrarModalUsuario(); cargarUsuariosSelect(); }
+            else { ui.alertar("Error", "No se pudo crear."); }
+        }
+
+        function getColor(st) { return st === 'Pendiente' ? '#fbbf24' : st === 'En Proceso' ? '#3b82f6' : '#10b981'; }
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+        
+        cargar();
+    </script>
+</body>
+</html>

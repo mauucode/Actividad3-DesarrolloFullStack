@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tesla OS | Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-box { 
+            margin-top: 100px; 
+            max-width: 400px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            padding: 40px;
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            background: #111; 
+            border: 1px solid #333; 
+            color: white; 
+            border-radius: 4px;
+            box-sizing: border-box; 
+        }
+        input:focus {
+            border-color: #e82127;
+            outline: none;
+        }
+        h2 { color: #fff; font-weight: 300; letter-spacing: 1px; margin-bottom: 30px; }
+    </style>
+</head>
+<body class="tesla-app-bg" style="text-align: center;">
+    
+    <div class="glass-panel login-box">
+        <img src="img/logo.png" width="150" style="margin-bottom: 20px; opacity: 0.8;">
+        <h2>Acceso Restringido</h2>
+        
+        <input type="text" id="username" placeholder="Usuario (ID)">
+        <input type="password" id="password" placeholder="Contraseña">
+        
+        <button onclick="login()" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 12px;">Ingresar al Sistema</button>
+        
+        <p id="error-msg" style="color: #ef4444; margin-top: 20px; font-size: 0.9rem; min-height: 20px;"></p>
+    </div>
+
+    <script>
+        // La IP debe ser localhost 
+        const API_URL = 'http://localhost:3000/api';
+
+        async function login() {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMsg = document.getElementById('error-msg');
+
+            // Limpiar mensajes previos
+            errorMsg.innerText = '';
+
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (!username || !password) {
+                errorMsg.innerText = "Por favor ingresa usuario y contraseña.";
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                
+                if (res.ok) {
+                    // Login exitoso: Guardamos el token y los datos del usuario
+                    localStorage.setItem('teslaToken', data.token);
+                    localStorage.setItem('teslaRole', data.role);
+                    localStorage.setItem('teslaName', data.name);
+                    
+                    // Redirigir al Dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Error de credenciales
+                    errorMsg.innerText = data.message || "Error de acceso.";
+                    passwordInput.value = ''; // Limpiar la contraseña por seguridad
+                }
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerText = "Error de conexión con el servidor.";
+            }
+        }
+
+        // Permitir login 
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

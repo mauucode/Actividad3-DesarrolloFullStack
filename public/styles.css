@@ -1,0 +1,451 @@
+/* Quitar mis margenes de navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif; 
+}
+
+body {
+    background-color: #f9f9f9;
+    color: #171a20; 
+}
+
+/* --- HEADER --- */
+.main-header {
+    background-color: #000;
+    color: #fff;
+    padding: 30px 10px;
+    text-align: center;
+    
+    /* --- EL SCROLL DE MI HEADER --- */
+    position: sticky;  
+    top: 0;            /* Le dice que se pegue justo en el borde de arriba */
+    z-index: 1000;     /* El header flote encima de las fotos  */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Sombrita para que se note dónde termina el header */
+}
+
+.logo-img {
+    width: 250px;       
+    height: auto;       
+    display: block;
+    margin: 0 auto 25px auto; /* 25px de espacio hacia abajo */
+}
+
+/* El texto tiene su propio espacio */
+.hero-text h1 {
+    margin: 0;
+    font-size: 2.2rem;   
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    margin-top: 10px;    /* Espacio entre el título y el párrafo */
+    font-size: 1rem;
+    color: #e0e0e0;     
+}
+
+/* --- MODELOS DE CARROS --- */
+.models-section {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.models-section h2 {
+    text-align: center;     
+    font-size: 2.5rem;      
+    margin-bottom: 40px;    /* Espacio grande debajo del título para separar las fotos */
+    margin-top: 20px;       /* Espacio arriba del título  */
+    color: #171a20;       
+}
+
+
+.cards-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Si no caben a lo largo, bajan en la otra seccion */
+    gap: 20px;
+}
+
+.car-card {
+    position: relative; /* Los limites para mi contenido dentro de las tarejtas */
+    width: 48%;         
+    height: 400px;      
+    border-radius: 15px;
+    overflow: hidden;   /* Si la imagen se sale, la recorta por estetica nada mas*/
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/*  Imagen de fondo (carro)*/
+.car-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+    display: block;
+}
+
+/* Un degradado negro para que el texto blanco se vea */
+.card-overlay {
+    position: absolute; /* Flota sobre la imagen */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; 
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    display: flex;
+    align-items: flex-end; /* Pone el contenido al fondo */
+    padding: 30px;
+}
+
+.card-content {
+    width: 100%;
+    color: white; 
+    text-align: left;
+}
+
+.card-content h3 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+/* --- BOTONES  --- */
+.buttons-row {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-blue, .btn-white {
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    flex: 1; /*  Me aseguro qe ambos botones midan lo mismo */
+}
+
+/* Botón 1 (Orrdenar) */
+.btn-blue {
+    background-color: #3e6ae1;
+    color: white;
+}
+.btn-blue:hover { background-color: #2c4cb5; }
+
+/* Botón 2 (Saber mas) */
+.btn-white {
+    background-color: white;
+    color: #171a20;
+}
+.btn-white:hover { background-color: #e0e0e0; }
+
+/* --- RESPONSIVA --- */
+@media screen and (max-width: 768px) {
+    .car-card {
+        width: 100%; /* Para el celular ocuparan todo el ancho */
+        height: 350px;
+    }
+    
+    .card-content h3 {
+        font-size: 1.8rem; /* Un poco más chico en cel para que me quede espacio */
+    }
+}
+
+
+/* --- CONTACTO --- */
+.contact-section {
+    max-width: 600px;
+    margin: 50px auto; /* Mucho espacio arriba y abajo */
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+.contact-section h2 {
+    margin-bottom: 10px; /* Espacio abajo de donde dice "Contactanos" */
+    color: #000;         
+}
+
+.contact-section p {
+    margin-bottom: 30px; /* Espacio tambien antes de empezar el formulario */
+    color: #555;         
+    line-height: 1.5;    /* Para que las letras no se vean apretadas entre sí */
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    font-family: inherit; /* Para que la letra sea en toda la pagina (se hereda) */
+}
+
+textarea {
+    resize: none; 
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #e82127; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold; 
+    transition: background-color 0.3s ease; 
+}
+
+.btn-primary:hover {
+    background-color: #c01c20; 
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #222;
+    color: #888;
+    margin-top: 40px;
+}
+
+.socials a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* --- RESPONSIVO 2 --- */
+/* Cuando la pantalla sea de un celular, cambiamos a columna */
+@media screen and (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .car-card {
+        width: 100%; /* Que ocupe todo el ancho en cel (asegurando que si aplique) */
+        margin-bottom: 20px;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+    }
+}
+
+/* --- ESTILO Y DISEÑO PARA MI APARTADO DE TAREAS --- */
+
+.tesla-app-bg {
+    background-color: #111; 
+    color: white;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+/* Panel estilo cristal */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+/* Lista de tareas */
+.task-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.task-item {
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.task-item.completada {
+    opacity: 0.5;
+    border-left: 4px solid #3e6ae1; /* Borde azul cuando está lista */
+}
+
+/*  Solo tacha el texto (el span) */
+.task-item.completada span {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+/* Botones pequeños de acción */
+.actions button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-delete { background-color: #e82127; color: white; }
+.btn-edit { background-color: #f4f4f4; color: black; }
+.btn-check { background-color: #3e6ae1; color: white; }
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .input-area { flex-direction: column; }
+}
+
+/* --- BOTÓN DE NAVEGACIÓN EN EL HEADER --- */
+.btn-nav {
+    display: inline-block;   
+    background-color: #ffffff; 
+    color: #171a20;            
+    text-decoration: none;     
+    padding: 10px 25px;      
+    border-radius: 5px;      
+    font-weight: 700;        
+    font-size: 0.9rem;
+    margin-top: 25px;        
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+}
+
+
+.btn-nav:hover {
+    background-color: #f0f0f0; 
+    transform: translateY(-3px); 
+}
+
+/* --- ESTILOS DEL MODAL (VENTANA EMERGENTE) --- */
+.modal-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; 
+    backdrop-filter: blur(5px); 
+    transition: opacity 0.3s ease;
+}
+
+/* Para ocultar el modal */
+.hidden {
+    display: none !important;
+}
+
+.modal-box {
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(62, 106, 225, 0.3); 
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Botón Cancelar (Gris/Blanco) */
+.btn-cancel {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.btn-cancel:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Ajustar para botón primario que compartan espacio */
+.modal-buttons .btn-primary {
+    flex: 1;
+}
+
+.modal-box h2 {
+    margin-top: 15px;    
+    margin-bottom: 25px; 
+    text-align: center;  
+}
+
+/* ---  MOVILES --- */
+@media (max-width: 600px) {
+    
+   
+    .task-item {
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 10px; 
+    }
+
+    
+    .task-item span {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 1rem;
+        word-break: break-word; 
+    }
+
+   
+    .task-item .actions {
+        width: 100%;       
+        display: flex;     
+        justify-content: space-between; 
+        gap: 10px;         
+    }
+
+    /* 4. Botones más grandes y cómodos*/
+    .actions button {
+        flex: 1;           
+        padding: 12px 0;   
+        font-size: 0.9rem;
+        display: flex;     
+        justify-content: center;
+        align-items: center;
+    }
+}

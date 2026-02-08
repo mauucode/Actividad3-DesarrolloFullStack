@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla | Mantenimiento</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tesla-app-bg">
+
+    <header class="main-header">
+        <a href="index.html">
+            <img src="img/logo.png" alt="Tesla Logo" class="logo-img">
+        </a>
+    </header>
+
+    <main class="app-container">
+        <div class="glass-panel">
+            <h1>Tesla Copiloto</h1>
+            <p>Gestiona tus actividades de viaje y mantenimiento.</p>
+
+            <div class="input-area">
+                <input type="text" id="nueva-tarea" placeholder="Ej. Cargar batería al 80%...">
+                <button id="btn-agregar" class="btn-primary">Agregar Tarea</button>
+            </div>
+
+            <ul id="lista-tareas" class="task-list"></ul>
+        </div>
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="glass-panel modal-box">
+            <h2>Editar Tarea</h2>
+            <input type="text" id="input-editar" placeholder="Nuevo nombre...">
+            
+            <div class="modal-buttons">
+                <button id="btn-cancelar" class="btn-cancel">Cancelar</button>
+                <button id="btn-guardar-cambios" class="btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+
+</html>
