@@ -1,4 +1,4 @@
-# 🚗 Tesla Copiloto OS - Full Stack Task Manager
+# 🚗 Tesla Copiloto OS - Full Stack Administrador de Tareas
 
 ![Status](https://img.shields.io/badge/Status-Terminado-success)
 ![Node.js](https://img.shields.io/badge/Backend-Node.js%20%7C%20Express-green)
@@ -64,4 +64,5 @@ node server.js
 | **Empleado** | `diego` | `diego` | Solo lectura y completar tareas |
 
 > **Nota Importante:** Puedes crear nuevos usuarios desde el Dashboard entrando como Administrador.
+
 
