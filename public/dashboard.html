@@ -2,96 +2,111 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla Copiloto | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Tesla Copiloto | Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-
-        /* --- ESTILOS GENERALES --- */
-        body { font-family: 'Roboto', sans-serif; background-color: #111; color: #fff; }
+        /* --- ESTILOS BASE (Sobrescriben styles.css si hay conflicto con mi otro archivo) --- */
+        body { font-family: 'Roboto', sans-serif; background-color: #111; color: #fff; margin: 0; }
         .dashboard-container { padding: 2rem; max-width: 1400px; margin: 0 auto; }
-        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: #000; border-bottom: 1px solid #333; }
         
-        /* ADMIN PANEL */
+        /* HEADER */
+        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background-color: #000; border-bottom: 1px solid #333; }
+
+        /* PANEL ADMIN */
         .admin-panel { background-color: #1c1c1c; padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333; display: none; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .panel-header h3 { margin: 0; color: #fff; font-size: 1.2rem; }
         .input-group { display: flex; gap: 15px; align-items: center; }
-        
-        /* INPUTS Y SELECTS */
-        .tesla-input { padding: 12px 15px; border-radius: 4px; border: 1px solid #444; background-color: #000; color: #fff; font-size: 1rem; outline: none; }
-        .tesla-input:focus { border-color: #e82127; }
-        .input-desc { flex: 3; } .input-user { flex: 1; cursor: pointer; }
 
-        /* BOTONES */
-        .btn-crear { padding: 12px 25px; background-color: #e82127; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        .btn-crear:hover { background-color: #cc1d22; }
-        .btn-user-add { padding: 8px 15px; background-color: transparent; border: 1px solid #3b82f6; color: #3b82f6; border-radius: 4px; cursor: pointer; font-weight: 500; transition: 0.3s; }
-        .btn-user-add:hover { background-color: #3b82f6; color: #fff; }
+        /* INPUTS & BOTONES */
+        .tesla-input { padding: 12px; border-radius: 4px; border: 1px solid #444; background: #000; color: #fff; outline: none; }
+        .btn-crear { padding: 12px 25px; background: #e82127; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        .btn-user-add { background: transparent; border: 1px solid #3b82f6; color: #3b82f6; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        .btn-save-manual { background-color: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
 
-        /* TABLA */
-        .table-container { background-color: #181818; border-radius: 8px; overflow: hidden; border: 1px solid #333; }
+        /* TABLA (Solo Desktop) */
+        .table-container { background-color: #181818; border-radius: 8px; overflow: hidden; border: 1px solid #333; margin-top: 20px; }
         .tasks-table { width: 100%; border-collapse: collapse; }
-        .tasks-table th { background-color: #222; color: #aaa; text-transform: uppercase; padding: 15px; text-align: left; font-size: 0.85rem; }
-        .tasks-table td { padding: 15px; border-bottom: 1px solid #2a2a2a; vertical-align: middle; }
-        .task-id { font-family: 'Courier New', monospace; color: #666; margin-right: 10px; border: 1px solid #333; padding: 2px 6px; border-radius: 4px; }
-        .task-desc { font-weight: 500; font-size: 1.05rem; color: #fff; }
-        
-        /* ACCIONES ADMIN */
-        .btn-action { background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 8px; transition: transform 0.2s; }
-        .btn-action:hover { transform: scale(1.2); }
-        .btn-edit { color: #3b82f6; } 
-        .btn-delete { color: #ef4444; } 
+        .tasks-table th, .tasks-table td { padding: 15px; text-align: left; border-bottom: 1px solid #2a2a2a; }
+        .tasks-table th { background-color: #222; color: #aaa; text-transform: uppercase; font-size: 0.85rem; }
 
-        /* BOTÓN DE GUARDAR PARA USUARIO */
-        .btn-save-manual {
-            background-color: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; transition: background 0.3s;
-        }
-        .btn-save-manual:hover { background-color: #059669; }
+        /* UI ELEMENTS */
+        .user-badge { display: flex; align-items: center; gap: 8px; background: #333; padding: 5px 10px; border-radius: 20px; width: fit-content; }
+        .avatar-circle { width: 24px; height: 24px; background: #666; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; font-weight: bold; }
+        .status-select { padding: 5px; border-radius: 15px; background: #000; color: #fff; border: 1px solid #444; }
 
-        .user-badge { display: flex; align-items: center; gap: 8px; background-color: #333; padding: 5px 10px; border-radius: 20px; width: fit-content; }
-        .avatar-circle { width: 24px; height: 24px; background-color: #666; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; font-weight: bold; }
-        .status-select { padding: 5px 10px; border-radius: 15px; background-color: #000; color: #fff; border: 1px solid #444; cursor: pointer; }
+        /* TARJETAS MÓVILES (Ocultas por defecto en Desktop) */
+        .mobile-cards { display: none; } 
 
         /* MODALES */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; display: none; backdrop-filter: blur(5px); }
-        .modal-box { background: #1c1c1c; padding: 30px; border-radius: 12px; border: 1px solid #333; width: 90%; max-width: 450px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: left; }
-        .modal-box h3 { margin-top: 0; color: #fff; margin-bottom: 15px; font-size: 1.4rem; text-align: center; }
-        .modal-box label { display: block; margin-top: 10px; color: #aaa; font-size: 0.9rem; margin-bottom: 5px; }
-        .modal-buttons { display: flex; gap: 10px; margin-top: 25px; justify-content: center; }
-        .btn-cancel { background: transparent; border: 1px solid #666; color: #ccc; padding: 10px 20px; border-radius: 4px; cursor: pointer; flex: 1; }
-        .btn-save { background: #e82127; border: none; color: white; padding: 10px 20px; border-radius: 4px; cursor: pointer; flex: 1; }
-        .btn-save:hover { background: #cc1d22; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; display: none; }
+        .modal-box { background: #1c1c1c; padding: 30px; border-radius: 12px; border: 1px solid #333; width: 90%; max-width: 450px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+        .btn-cancel { background: transparent; border: 1px solid #666; color: #ccc; padding: 10px; border-radius: 4px; cursor: pointer; flex: 1; }
+        .btn-save { background: #e82127; border: none; color: white; padding: 10px; border-radius: 4px; cursor: pointer; flex: 1; }
 
-        @media (max-width: 768px) { .tasks-table { display: none; } .mobile-cards { display: flex; flex-direction: column; gap: 15px; } .input-group { flex-direction: column; } }
-        .mobile-cards { display: none; }
+        @media (max-width: 768px) {
+            .dashboard-container { padding: 15px; }
+            
+            /* 1. Ocultar tabla, MOSTRAR TARJETAS (Forzado) */
+            .table-container, .tasks-table { display: none !important; }
+            
+            .mobile-cards { 
+                display: flex !important; /* !important para ganar a cualquier otra regla */
+                flex-direction: column; 
+                gap: 15px; 
+                margin-top: 20px;
+                padding-bottom: 50px; /* Espacio al final para poder hacer scroll */
+            }
+
+            /* Estilo de cada tarjeta */
+            .task-card {
+                background-color: #1c1c1c;
+                border: 1px solid #333;
+                border-radius: 8px;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            /* 2. Ajustar Panel Admin para que no ocupe tanto espacio */
+            .admin-panel { padding: 15px; margin-bottom: 20px; }
+            .panel-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .input-group { flex-direction: column; width: 100%; }
+            .tesla-input, .btn-crear, .btn-user-add { width: 100%; box-sizing: border-box; }
+            
+            /* Textos más legibles */
+            h3 { font-size: 1.1rem; }
+            p { font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body class="tesla-app-bg">
 
     <header class="main-header">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="img/logo.png" alt="Tesla" style="height: 20px;">
-            <span style="border-left: 1px solid #444; padding-left: 15px;">Copiloto OS</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="img/logo.png" alt="Tesla" style="height: 18px;">
+            <span style="border-left: 1px solid #444; padding-left: 10px; font-size: 0.9rem;">Copiloto</span>
         </div>
-        <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding: 5px 15px; cursor:pointer;">Salir</button>
+        <button onclick="logout()" style="background:none; border:1px solid #444; color:#fff; padding: 5px 12px; border-radius:4px; font-size:0.8rem;">Salir</button>
     </header>
 
     <main class="dashboard-container">
-        <h2 id="greeting">Bienvenido</h2>
+        <h2 id="greeting" style="font-size: 1.2rem; margin-bottom: 20px;">Bienvenido</h2>
         
         <div id="admin-panel" class="admin-panel">
             <div class="panel-header">
-                <h3>+ Nueva Asignación</h3>
+                <h3 style="margin:0;">+ Nueva Tarea</h3>
                 <button onclick="abrirModalUsuario()" class="btn-user-add">👤 Crear Usuario</button>
             </div>
             <div class="input-group">
-                <input type="text" id="desc-tarea" class="tesla-input input-desc" placeholder="Descripción (Ej. Revisión Batería)">
+                <input type="text" id="desc-tarea" class="tesla-input input-desc" placeholder="Descripción...">
                 <select id="user-tarea" class="tesla-input input-user">
-                    <option value="" disabled selected>Seleccionar Empleado...</option>
+                    <option value="" disabled selected>Asignar a...</option>
                 </select>
-                <button onclick="crearTarea()" class="btn-crear">Asignar</button>
+                <button onclick="crearTarea()" class="btn-crear">Crear</button>
             </div>
         </div>
 
@@ -100,7 +115,9 @@
                 <thead>
                     <tr>
                         <th width="35%">ID / Descripción</th>
-                        <th>Inicio</th> <th>Fin</th>    <th>Asignado A</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Asignado A</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
                     </tr>
@@ -108,18 +125,17 @@
                 <tbody id="lista-tareas"></tbody>
             </table>
         </div>
-        <div id="mobile-cards" class="mobile-cards"></div>
+
+        <div id="mobile-cards" class="mobile-cards">
+            </div>
+
     </main>
 
     <div id="modal-editar" class="modal-overlay">
         <div class="modal-box">
             <h3>Editar Tarea</h3>
-            <label>Descripción:</label>
-            <input type="text" id="edit-desc" class="tesla-input" style="width:100%; box-sizing:border-box;">
-            <label>Asignado a:</label>
-            <select id="edit-user" class="tesla-input" style="width:100%; box-sizing:border-box;">
-                <option value="" disabled>Cargando empleados...</option>
-            </select>
+            <label>Descripción:</label><input type="text" id="edit-desc" class="tesla-input" style="width:100%;">
+            <label>Asignado:</label><select id="edit-user" class="tesla-input" style="width:100%;"></select>
             <input type="hidden" id="edit-id">
             <div class="modal-buttons">
                 <button onclick="cerrarModalEditar()" class="btn-cancel">Cancelar</button>
@@ -130,21 +146,17 @@
 
     <div id="modal-usuario" class="modal-overlay">
         <div class="modal-box">
-            <h3 style="color: #3b82f6;">Registrar Nuevo Usuario</h3>
-            <label>Nombre Completo:</label>
-            <input type="text" id="reg-name" class="tesla-input" placeholder="Ej. Laura Martínez" style="width:100%; box-sizing:border-box;">
-            <label>Usuario (Login):</label>
-            <input type="text" id="reg-username" class="tesla-input" placeholder="Ej. laura" style="width:100%; box-sizing:border-box;">
-            <label>Contraseña:</label>
-            <input type="password" id="reg-password" class="tesla-input" placeholder="******" style="width:100%; box-sizing:border-box;">
-            <label>Rol:</label>
-            <select id="reg-role" class="tesla-input" style="width:100%; box-sizing:border-box;">
-                <option value="user">Empleado (Solo ver tareas)</option>
-                <option value="admin">Administrador (Control Total)</option>
+            <h3>Nuevo Usuario</h3>
+            <input type="text" id="reg-name" class="tesla-input" placeholder="Nombre" style="width:100%; margin-bottom:10px;">
+            <input type="text" id="reg-username" class="tesla-input" placeholder="Usuario" style="width:100%; margin-bottom:10px;">
+            <input type="password" id="reg-password" class="tesla-input" placeholder="Contraseña" style="width:100%; margin-bottom:10px;">
+            <select id="reg-role" class="tesla-input" style="width:100%; margin-bottom:10px;">
+                <option value="user">Empleado</option>
+                <option value="admin">Admin</option>
             </select>
             <div class="modal-buttons">
                 <button onclick="cerrarModalUsuario()" class="btn-cancel">Cancelar</button>
-                <button onclick="registrarUsuario()" class="btn-save" style="background-color: #3b82f6;">Registrar</button>
+                <button onclick="registrarUsuario()" class="btn-save">Registrar</button>
             </div>
         </div>
     </div>
@@ -166,84 +178,66 @@
         let accionPendiente = null;
 
         if (!token) window.location.href = 'login.html';
-        document.getElementById('greeting').innerText = `Panel de Control: ${myName} (${role.toUpperCase()})`;
+        document.getElementById('greeting').innerText = `Panel: ${myName} (${role === 'admin' ? 'ADMIN' : 'USER'})`;
         
         if (role === 'admin') {
             document.getElementById('admin-panel').style.display = 'block';
             cargarUsuariosSelect();
         }
 
-        // --- UI SISTEMA ---
-        const ui = {
-            alertar: (titulo, mensaje) => {
-                document.getElementById('sys-title').innerText = titulo;
-                document.getElementById('sys-msg').innerText = mensaje;
-                document.getElementById('sys-title').style.color = "#fff";
-                document.getElementById('sys-btns').innerHTML = `<button onclick="ui.cerrar()" class="btn-save">Entendido</button>`;
-                document.getElementById('modal-sistema').style.display = 'flex';
-            },
-            confirmar: (titulo, mensaje, callback) => {
-                document.getElementById('sys-title').innerText = titulo;
-                document.getElementById('sys-msg').innerText = mensaje;
-                document.getElementById('sys-title').style.color = "#e82127";
-                accionPendiente = callback;
-                document.getElementById('sys-btns').innerHTML = `<button onclick="ui.cerrar()" class="btn-cancel">Cancelar</button><button onclick="ui.ejecutarAccion()" class="btn-save">Confirmar</button>`;
-                document.getElementById('modal-sistema').style.display = 'flex';
-            },
-            cerrar: () => { document.getElementById('modal-sistema').style.display = 'none'; accionPendiente = null; },
-            ejecutarAccion: () => { if (accionPendiente) accionPendiente(); ui.cerrar(); }
-        };
-
-        async function cargarUsuariosSelect() {
-            try {
-                const res = await fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } });
-                if(res.ok) {
-                    const usuarios = await res.json();
-                    const options = '<option value="" disabled selected>Seleccionar Empleado...</option>' + 
-                                    usuarios.map(u => `<option value="${u.name}">${u.name} (${u.username})</option>`).join('');
-                    document.getElementById('user-tarea').innerHTML = options;
-                    document.getElementById('edit-user').innerHTML = options;
-                }
-            } catch (e) { console.error(e); }
-        }
-
-        // --- LÓGICA PRINCIPAL ---
+        // --- RENDERIZADO PRINCIPAL ---
         async function cargar() {
-            const res = await fetch(`${API}/tareas`, { headers: { 'Authorization': `Bearer ${token}` } });
-            tareasGlobales = await res.json();
-            render(tareasGlobales);
+            try {
+                const res = await fetch(`${API}/tareas`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if(res.ok) {
+                    tareasGlobales = await res.json();
+                    render(tareasGlobales);
+                }
+            } catch(e) { console.error(e); }
         }
 
         function render(tareas) {
             const tbody = document.getElementById('lista-tareas');
             const mobile = document.getElementById('mobile-cards');
-            tbody.innerHTML = ''; mobile.innerHTML = '';
+            tbody.innerHTML = ''; 
+            mobile.innerHTML = '';
+
+            // Si no hay tareas, mostrar mensaje en móvil
+            if(tareas.length === 0) {
+                mobile.innerHTML = '<p style="text-align:center; color:#666;">No hay tareas asignadas.</p>';
+                return;
+            }
             
             tareas.forEach(t => {
                 const initUser = t.assignedTo ? t.assignedTo[0].toUpperCase() : '?';
-                
-                //  Verificamos si existe la fecha de completado
-                const fechaFin = t.completedAt ? `<span style="color:#10b981; font-weight:bold;">${t.completedAt}</span>` : '<span style="color:#444;">-</span>';
+                const fechaFin = t.completedAt ? `<span style="color:#10b981;">${t.completedAt}</span>` : '-';
 
-                let acciones = '';
+                // Determinar acciones según rol
+                let accionesDesktop = '';
+                let accionesMobile = '';
                 let selectAttributes = '';
 
                 if (role === 'admin') {
-                    acciones = `
-                        <button onclick="abrirModalEditar(${t.id})" class="btn-action btn-edit" title="Editar">✎</button>
-                        <button onclick="preguntaBorrar(${t.id})" class="btn-action btn-delete" title="Borrar">✖</button>
-                    `;
+                    // ADMIN: Botones de editar/borrar
+                    accionesDesktop = `
+                        <button onclick="abrirModalEditar(${t.id})" style="color:#3b82f6; background:none; border:none; cursor:pointer; font-size:1.1rem;">✎</button>
+                        <button onclick="preguntaBorrar(${t.id})" style="color:#ef4444; background:none; border:none; cursor:pointer; font-size:1.1rem;">✖</button>`;
+                    accionesMobile = accionesDesktop;
                     selectAttributes = `onchange="cambiarStatus(${t.id}, this.value)"`;
                 } else {
-                    acciones = `<button onclick="guardarEstatusManual(${t.id})" class="btn-save-manual">💾 Guardar</button>`;
+                    // USER: Botón de guardar
+                    accionesDesktop = `<button onclick="guardarEstatusManual(${t.id})" class="btn-save-manual">💾</button>`;
+                    accionesMobile = `<button onclick="guardarEstatusManual(${t.id})" class="btn-save-manual" style="width:100%;">💾 Guardar Cambios</button>`;
                     selectAttributes = `id="status-${t.id}"`;
                 }
 
-                const htmlRow = `
+                // 1. FILA DE TABLA (PC)
+                tbody.innerHTML += `
                     <tr>
-                        <td><span class="task-id">#${t.id}</span><span class="task-desc">${t.title}</span></td>
+                        <td><small style="color:#666; font-family:monospace;">#${t.id}</small><br><b>${t.title}</b></td>
                         <td style="color:#888">${t.createdAt}</td>
-                        <td>${fechaFin}</td> <td><div class="user-badge"><div class="avatar-circle">${initUser}</div>${t.assignedTo}</div></td>
+                        <td>${fechaFin}</td>
+                        <td><div class="user-badge"><div class="avatar-circle">${initUser}</div>${t.assignedTo}</div></td>
                         <td>
                             <select ${selectAttributes} class="status-select" style="border-color:${getColor(t.status)}; color:${getColor(t.status)}">
                                 <option value="Pendiente" ${t.status=='Pendiente'?'selected':''}>Pendiente</option>
@@ -251,89 +245,81 @@
                                 <option value="Completada" ${t.status=='Completada'?'selected':''}>Completada</option>
                             </select>
                         </td>
-                        <td>${acciones}</td>
+                        <td>${accionesDesktop}</td>
                     </tr>`;
                 
-                tbody.innerHTML += htmlRow;
-                
-                // VISTA MÓVIL 
+                // 2. TARJETA CELULAR - 
                 mobile.innerHTML += `
-                    <div style="background:#1c1c1c; padding:20px; border-radius:8px; border:1px solid #333;">
-                        <div style="display:flex; justify-content:space-between;"><small>#${t.id}</small><div>${acciones}</div></div>
-                        <h3 style="margin:5px 0 10px 0;">${t.title}</h3>
-                        <p style="color:#888; margin-bottom:5px;">Inicio: ${t.createdAt}</p>
-                        ${t.completedAt ? `<p style="color:#10b981; margin-bottom:10px;">Completado: ${t.completedAt}</p>` : ''}
-                        <p style="color:#aaa;">Asignado: ${t.assignedTo}</p>
-                        <p style="color:${getColor(t.status)}">Estatus: ${t.status}</p>
+                    <div class="task-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:10px;">
+                            <span style="font-family:monospace; color:#666;">#${t.id}</span>
+                            <div>${role === 'admin' ? accionesMobile : ''}</div>
+                        </div>
+                        
+                        <h3 style="margin:0; font-size:1.1rem; color:#fff;">${t.title}</h3>
+                        
+                        <div style="font-size:0.9rem; color:#ccc; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <div><span style="color:#666;">Inicio:</span><br>${t.createdAt}</div>
+                            <div><span style="color:#666;">Fin:</span><br>${fechaFin}</div>
+                            <div style="grid-column: span 2;">
+                                <span style="color:#666;">Asignado:</span>
+                                <div class="user-badge" style="display:inline-flex; margin-left:5px;">${t.assignedTo}</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            <label style="color:#666; font-size:0.8rem;">Estatus:</label>
+                            <select ${selectAttributes} class="status-select" style="width:100%; margin-top:5px; padding:10px; border-color:${getColor(t.status)}; color:${getColor(t.status)}">
+                                <option value="Pendiente" ${t.status=='Pendiente'?'selected':''}>Pendiente</option>
+                                <option value="En Proceso" ${t.status=='En Proceso'?'selected':''}>En Proceso</option>
+                                <option value="Completada" ${t.status=='Completada'?'selected':''}>Completada</option>
+                            </select>
+                        </div>
+
+                        ${role !== 'admin' ? `<div style="margin-top:10px;">${accionesMobile}</div>` : ''}
                     </div>`;
             });
         }
 
-        // --- FUNCIONES ---
-        function guardarEstatusManual(id) {
+        // --- UI & LOGICA ---
+        const ui = {
+            alertar: (t, m) => { document.getElementById('sys-title').innerText=t; document.getElementById('sys-msg').innerText=m; document.getElementById('sys-btns').innerHTML=`<button onclick="ui.cerrar()" class="btn-save">OK</button>`; document.getElementById('modal-sistema').style.display='flex'; },
+            confirmar: (t, m, cb) => { document.getElementById('sys-title').innerText=t; document.getElementById('sys-msg').innerText=m; accionPendiente=cb; document.getElementById('sys-btns').innerHTML=`<button onclick="ui.cerrar()" class="btn-cancel">Cancelar</button><button onclick="ui.ejecutar()" class="btn-save">Si</button>`; document.getElementById('modal-sistema').style.display='flex'; },
+            cerrar: () => { document.getElementById('modal-sistema').style.display='none'; accionPendiente=null; },
+            ejecutar: () => { if(accionPendiente) accionPendiente(); ui.cerrar(); }
+        };
+
+        // Funciones CRUD
+        async function guardarEstatusManual(id) {
             const nuevoStatus = document.getElementById(`status-${id}`).value;
-            ui.confirmar("¿Confirmar Guardado?", `El estatus cambiará a: ${nuevoStatus}`, async () => {
-                await fetch(`${API}/tareas/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ status: nuevoStatus })
-                });
-                ui.alertar("Éxito", "Cambios guardados correctamente.");
+            ui.confirmar("¿Guardar?", `Cambiar a: ${nuevoStatus}`, async () => {
+                await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: nuevoStatus }) });
                 cargar();
             });
         }
-
-        async function cambiarStatus(id, st) {
-            await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: st }) });
-            cargar();
-        }
-
+        async function cambiarStatus(id, st) { await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: st }) }); cargar(); }
         async function crearTarea() {
-            const desc = document.getElementById('desc-tarea').value;
-            const user = document.getElementById('user-tarea').value;
-            if(!desc || !user) return ui.alertar("Faltan Datos", "Selecciona un empleado.");
+            const desc = document.getElementById('desc-tarea').value; const user = document.getElementById('user-tarea').value;
+            if(!desc || !user) return ui.alertar("Error", "Faltan datos");
             await fetch(`${API}/tareas`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title: desc, assignedTo: user, assignmentArea: "General" }) });
-            document.getElementById('desc-tarea').value = '';
-            cargar();
+            document.getElementById('desc-tarea').value=''; cargar();
         }
-
-        function abrirModalEditar(id) {
-            const tarea = tareasGlobales.find(t => t.id === id);
-            if(tarea) {
-                document.getElementById('edit-id').value = id;
-                document.getElementById('edit-desc').value = tarea.title;
-                document.getElementById('edit-user').value = tarea.assignedTo;
-                document.getElementById('modal-editar').style.display = 'flex';
-            }
-        }
-        function cerrarModalEditar() { document.getElementById('modal-editar').style.display = 'none'; }
+        function preguntaBorrar(id) { ui.confirmar("¿Borrar?", "Se eliminará permanentemente.", async () => { await fetch(`${API}/tareas/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); cargar(); }); }
         
-        function intentarGuardar() {
-            ui.confirmar("¿Guardar Cambios?", "Se actualizará la tarea.", async () => {
-                const id = document.getElementById('edit-id').value;
-                const newTitle = document.getElementById('edit-desc').value;
-                const newUser = document.getElementById('edit-user').value;
-                await fetch(`${API}/tareas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ title: newTitle, assignedTo: newUser }) });
-                cerrarModalEditar();
-                cargar();
-            });
+        // Usuarios y Modales
+        async function cargarUsuariosSelect() {
+            try { const res = await fetch(`${API}/users`, { headers: { 'Authorization': `Bearer ${token}` } }); if(res.ok) { const users = await res.json(); const opts = '<option value="" disabled selected>Asignar...</option>' + users.map(u=>`<option value="${u.name}">${u.name}</option>`).join(''); document.getElementById('user-tarea').innerHTML=opts; document.getElementById('edit-user').innerHTML=opts; } } catch(e){}
         }
-
-        function preguntaBorrar(id) { ui.confirmar("¿Borrar?", "Acción permanente.", async () => { await fetch(`${API}/tareas/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); cargar(); }); }
+        function abrirModalEditar(id) { const t=tareasGlobales.find(x=>x.id===id); if(t){ document.getElementById('edit-id').value=id; document.getElementById('edit-desc').value=t.title; document.getElementById('edit-user').value=t.assignedTo; document.getElementById('modal-editar').style.display='flex'; } }
+        function cerrarModalEditar() { document.getElementById('modal-editar').style.display='none'; }
+        function intentarGuardar() { ui.confirmar("¿Guardar?", "Confirmar edición", async()=>{ const id=document.getElementById('edit-id').value; const t=document.getElementById('edit-desc').value; const u=document.getElementById('edit-user').value; await fetch(`${API}/tareas/${id}`, { method:'PUT', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body:JSON.stringify({title:t, assignedTo:u}) }); cerrarModalEditar(); cargar(); }); }
         
-        // --- USUSARIOS ---
-        function abrirModalUsuario() { document.getElementById('reg-name').value=''; document.getElementById('reg-username').value=''; document.getElementById('reg-password').value=''; document.getElementById('modal-usuario').style.display='flex'; }
-        function cerrarModalUsuario() { document.getElementById('modal-usuario').style.display='none'; }
-        async function registrarUsuario() {
-            const name = document.getElementById('reg-name').value; const username = document.getElementById('reg-username').value; const password = document.getElementById('reg-password').value; const role = document.getElementById('reg-role').value;
-            if (!name || !username || !password) return ui.alertar("Error", "Faltan datos");
-            const res = await fetch(`${API}/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, username, password, role }) });
-            if (res.ok) { ui.alertar("Éxito", "Usuario creado."); cerrarModalUsuario(); cargarUsuariosSelect(); }
-            else { ui.alertar("Error", "No se pudo crear."); }
-        }
+        function abrirModalUsuario(){ document.getElementById('reg-name').value=''; document.getElementById('reg-username').value=''; document.getElementById('reg-password').value=''; document.getElementById('modal-usuario').style.display='flex'; }
+        function cerrarModalUsuario(){ document.getElementById('modal-usuario').style.display='none'; }
+        async function registrarUsuario(){ const n=document.getElementById('reg-name').value; const u=document.getElementById('reg-username').value; const p=document.getElementById('reg-password').value; const r=document.getElementById('reg-role').value; if(!n||!u||!p) return ui.alertar("Error","Faltan datos"); const res=await fetch(`${API}/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,username:u,password:p,role:r})}); if(res.ok){ ui.alertar("Éxito","Usuario creado"); cerrarModalUsuario(); cargarUsuariosSelect(); } else ui.alertar("Error","No se pudo crear"); }
 
-        function getColor(st) { return st === 'Pendiente' ? '#fbbf24' : st === 'En Proceso' ? '#3b82f6' : '#10b981'; }
-        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+        function getColor(s) { return s==='Pendiente'?'#fbbf24':s==='En Proceso'?'#3b82f6':'#10b981'; }
+        function logout() { localStorage.clear(); window.location.href='login.html'; }
         
         cargar();
     </script>
